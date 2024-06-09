@@ -6,11 +6,31 @@
 <hr>
 <h3>Комментарии</h3>
 {# список комментариев #}
+<ul>
+    {% for comment in post.comments %}
+            <li><strong>{{ comment.author }}:</strong> {{ comment.body }} </li>
+    {% else %}
+            <li>Нет комментариев.</li>
+    {% endfor %}
+    
+    
+</ul>
 <hr>
 <h3>Введите ваш комментарий</h3>
 <form method="post">
     {{ form.hidden_tag() }}
-    {# поле ввода для комментария #}
+    {# Поле ввода для имени автора #}
+    <p>
+        {{ form.author.label }}<br>
+        {{ form.author(size=32) }}
+    </p>
+    {# Поле ввода для текста комментария #}
+    <p>
+        {{ form.body.label }}<br>
+        {{ form.body(rows=4, cols=50) }}
+    </p>
+    {# Кнопка для отправки формы #}
     <p><input type="submit" value="Добавить"></p>
 </form>
+
 {% endblock %}

@@ -6,6 +6,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager, UserMixin
 
+from datetime import datetime
 db = SQLAlchemy()
 login = LoginManager()
 migrate = Migrate()
@@ -44,6 +45,15 @@ class Post(db.Model):
     title = db.Column(db.String(75), nullable=False)
     text = db.Column(db.Text)
     published = db.Column(db.DateTime, nullable=False)
-
+    comments = db.relationship('Comment', backref='post', lazy=True)
     def __str__(self):
         return self.title
+class Comment(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    body = db.Column(db.Text, nullable=False)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=False)
+    author = db.Column(db.String(80), nullable=False)
+
+    def __str__(self):
+        return f"Comment by {self.author} on {self.post.title}"
